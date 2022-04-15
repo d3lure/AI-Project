@@ -1,4 +1,4 @@
-# ADA Boost vs Convolutional Neural Networks <br> in Image Detection / Segmentation
+# ADA Boost vs Convolutional Neural Networks <br> in Image Detection / Segmentation / Classification
 
 ## Helpful links
 CNN: 
