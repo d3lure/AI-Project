@@ -1,5 +1,8 @@
 # ADA Boost vs Convolutional Neural Networks <br> in Image Detection / Segmentation / Classification
 
+## Link do sprawozdania
+https://docs.google.com/document/d/163uMQb9-bUHF0PSLry2Lafn7EGXJh3DO0rDbsrggUXk/edit?usp=sharing
+
 ## Helpful links
 CNN: 
 - https://www.analyticsvidhya.com/blog/2020/02/learn-image-classification-cnn-convolutional-neural-networks-3-datasets/
