@@ -1,4 +1,4 @@
-# ADA Boost vs Convolutional Neural Networks <br> in Image Detection / Segmentation / Classification
+# ADA Boost vs Convolutional Neural Networks <br> in Image Classification
 
 ## Link do sprawozdania
 https://docs.google.com/document/d/163uMQb9-bUHF0PSLry2Lafn7EGXJh3DO0rDbsrggUXk/edit?usp=sharing
@@ -15,5 +15,6 @@ ADA Boost:
 - https://levelup.gitconnected.com/adaboost-in-image-classification-8dcc1799e53d
 - https://machinelearningmastery.com/adaboost-ensemble-in-python/
 - https://www.kaggle.com/code/prashant111/adaboost-classifier-tutorial/notebook
+- https://towardsdatascience.com/adaboost-from-scratch-37a936da3d50
 
 
