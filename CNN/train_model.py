@@ -11,9 +11,9 @@ data_dir = pathlib.Path(os.path.join('../data/'))
 # print(image_count)
 
 epochs = 16
-batch_size = 32
-img_height = 200
-img_width = 200
+batch_size = 64
+img_height = 180
+img_width = 180
 
 train_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
@@ -37,7 +37,6 @@ class_names = train_ds.class_names
 print(class_names)
 
 AUTOTUNE = tf.data.AUTOTUNE
-
 train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
 val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
@@ -60,7 +59,7 @@ model = Sequential([
     layers.MaxPooling2D(),
     layers.Conv2D(64, 3, padding='same', activation='relu'),
     layers.MaxPooling2D(),
-    layers.Dropout(0.3),
+    layers.Dropout(0.2),
     layers.Flatten(),
     layers.Dense(128, activation='relu'),
     layers.Dense(2)

@@ -1,136 +1,132 @@
-import pandas as pd
+import matplotlib.pyplot as plt
 import numpy as np
-
-# Compute error rate, alpha and w
+import os
 from sklearn.model_selection import train_test_split
+import joblib
+from skimage.io import imread
+from skimage.transform import resize
+from collections import Counter
+
 from sklearn.tree import DecisionTreeClassifier
 
 
-def compute_error(y, y_pred, w_i):
+def resize_all(src, pklname, include, width=150, height=None):
     """
-    Calculate the error rate of a weak classifier m. Arguments:
-    y: actual target value
-    y_pred: predicted value by weak classifier
-    w_i: individual weights for each observation
+    load images from path, resize them and write them as arrays to a dictionary,
+    together with labels and metadata. The dictionary is written to a pickle file
+    named '{pklname}_{width}x{height}px.pkl'.
 
-    Note that all arrays should be the same length
+    Parameter
+    ---------
+    src: str
+        path to data
+    pklname: str
+        path to output file
+    width: int
+        target width of the image in pixels
+    include: set[str]
+        set containing str
     """
-    return (sum(w_i * (np.not_equal(y, y_pred)).astype(int))) / sum(w_i)
+
+    height = height if height is not None else width
+
+    data = dict()
+    data['description'] = 'resized ({0}x{1})animal images in rgb'.format(int(width), int(height))
+    data['label'] = []
+    data['filename'] = []
+    data['data'] = []
+
+    pklname = f"{pklname}_{width}x{height}px.pkl"
+
+    # read all images in PATH, resize and write to DESTINATION_PATH
+    for subdir in os.listdir(src):
+        if subdir in include:
+            print(subdir)
+            current_path = os.path.join(src, subdir)
+
+            for file in os.listdir(current_path):
+                if file[-3:] in {'jpg', 'png'}:
+                    im = imread(os.path.join(current_path, file))
+                    im = resize(im, (width, height))  # [:,:,::-1]
+                    data['label'].append(subdir)
+                    data['filename'].append(file)
+                    data['data'].append(im)
+
+        joblib.dump(data, pklname)
 
 
-def compute_alpha(error):
-    """
-    Calculate the weight of a weak classifier m in the majority vote of the final classifier. This is called
-    alpha in chapter 10.1 of The Elements of Statistical Learning. Arguments:
-    error: error rate from weak classifier m
-    """
-    return np.log((1 - error) / error)
+data_path = '../data/'
+base_name = 'dogs_cats'
+width = 80
+include = {'dog', 'cat'}
 
+# resize_all(src=data_path, pklname=base_name, width=width, include=include)
 
-def update_weights(w_i, alpha, y, y_pred):
-    """
-    Update individual weights w_i after a boosting iteration. Arguments:
-    w_i: individual weights for each observation
-    y: actual target value
-    y_pred: predicted value by weak classifier
-    alpha: weight of weak classifier used to estimate y_pred
-    """
-    return w_i * np.exp(alpha * (np.not_equal(y, y_pred)).astype(int))
+data = joblib.load(f'{base_name}_{width}x{width}px.pkl')
+print('number of samples: ', len(data['data']))
+print('keys: ', list(data.keys()))
+print('description: ', data['description'])
+print('image shape: ', data['data'][0].shape)
+print('labels:', np.unique(data['label']))
 
+print(Counter(data['label']))
 
-# Define AdaBoost class
-class AdaBoost:
+# use np.unique to get all unique values in the list of labels
+labels = np.unique(data['label'])
 
-    def __init__(self):
-        self.alphas = []
-        self.G_M = []
-        self.M = None
-        self.training_errors = []
-        self.prediction_errors = []
+X = np.array(data['data'])
+y = np.array(data['label'])
 
-    def fit(self, X, y, M=100):
-        """
-        Fit model. Arguments:
-        X: independent variables - array-like matrix
-        y: target variable - array-like vector
-        M: number of boosting rounds. Default is 100 - integer
-        """
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True, random_state=123)
+print(X_train.shape)
+print(X_test.shape)
+print(y_train.shape)
+print(y_test.shape)
 
-        # Clear before calling
-        self.alphas = []
-        self.training_errors = []
-        self.M = M
+n, nx, ny, rgb = X_train.shape
+X_train = X_train.reshape((n, nx * ny * rgb))
 
-        # Iterate over M weak classifiers
-        for m in range(0, M):
+n, nx, ny, rgb = X_test.shape
+X_test = X_test.reshape((n, nx * ny * rgb))
 
-            # Set weights for current boosting iteration
-            if m == 0:
-                w_i = np.ones(len(y)) * 1 / len(y)  # At m = 0, weights are all the same and equal to 1 / N
-            else:
-                # (d) Update w_i
-                w_i = update_weights(w_i, alpha_m, y, y_pred)
+print(X_train.shape)
+print(X_test.shape)
 
-            # (a) Fit weak classifier and predict labels
-            G_m = DecisionTreeClassifier(max_depth=1)  # Stump: Two terminal-node classification tree
-            G_m.fit(X, y, sample_weight=w_i)
-            y_pred = G_m.predict(X)
+print(np.array(y_train))
+# exit()
 
-            self.G_M.append(G_m)  # Save to list of weak classifiers
+# Load libraries
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn import datasets
+# Import train_test_split function
+from sklearn.model_selection import train_test_split
+# Import scikit-learn metrics module for accuracy calculation
+from sklearn import metrics
 
-            # (b) Compute error
-            error_m = compute_error(y, y_pred, w_i)
-            self.training_errors.append(error_m)
+from sklearn.svm import SVC
 
-            # (c) Compute alpha
-            alpha_m = compute_alpha(error_m)
-            self.alphas.append(alpha_m)
+# import scikit-learn metrics module for accuracy calculation
+from sklearn.metrics import accuracy_score
 
-        assert len(self.G_M) == len(self.alphas)
+# svc = SVC(probability=True, kernel='linear')
 
-    def predict(self, X):
-        """
-        Predict using fitted model. Arguments:
-        X: independent variables - array-like
-        """
+dtree = DecisionTreeClassifier(criterion='entropy', max_depth=1, random_state=1)
+#
+# Instantiate the bagging classifier
+#
+abc = AdaBoostClassifier(base_estimator=dtree,
+                         n_estimators=100,
+                         learning_rate=0.0005,
+                         algorithm='SAMME',
+                         random_state=1)
 
-        # Initialise dataframe with weak predictions for each observation
-        weak_preds = pd.DataFrame(index=range(len(X)), columns=range(self.M))
+# Create adaboost classifier object
+# abc = AdaBoostClassifier(n_estimators=50, learning_rate=1)
 
-        # Predict class label for each weak classifier, weighted by alpha_m
-        for m in range(self.M):
-            y_pred_m = self.G_M[m].predict(X) * self.alphas[m]
-            weak_preds.iloc[:, m] = y_pred_m
+# Train Adaboost Classifier
+model = abc.fit(X_train, y_train)
 
-        # Calculate final predictions
-        y_pred = (1 * np.sign(weak_preds.T.sum())).astype(int)
+# Predict the response for test dataset
+y_pred = model.predict(X_test)
 
-        return y_pred
-
-
-# Dataset
-df = pd.read_csv('./spambase/spambase.data', header=None)
-
-# Column names
-names = pd.read_csv('./spambase/spambase.names', sep=':', skiprows=range(0, 33), header=None)
-col_names = list(names[0])
-col_names.append('Spam')
-
-# Rename df columns
-df.columns = col_names
-
-# Convert classes in target variable to {-1, 1}
-df['Spam'] = df['Spam'] * 2 - 1
-
-# Train - test split
-X_train, X_test, y_train, y_test = train_test_split(df.drop(columns='Spam').values,
-                                                    df['Spam'].values,
-                                                    train_size=3065,
-                                                    random_state=2)
-
-# Fit model
-ab = AdaBoost()
-ab.fit(X_train, y_train, M=400)
-
-# Predict on test set
-y_pred = ab.predict(X_test)
+print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
