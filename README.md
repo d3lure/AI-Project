@@ -18,3 +18,4 @@ ADA Boost:
 - https://towardsdatascience.com/adaboost-from-scratch-37a936da3d50
 
 
+> W `data.zip` macie wszystkie obrazy potrzebne do klasyfikacji
