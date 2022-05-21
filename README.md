@@ -17,4 +17,5 @@ ADA Boost:
 - https://www.kaggle.com/code/prashant111/adaboost-classifier-tutorial/notebook
 - https://towardsdatascience.com/adaboost-from-scratch-37a936da3d50
 
-
+##
+> W `data.zip` macie wszystkie obrazy potrzebne do klasyfikacji
