@@ -11,10 +11,11 @@ CNN:
 - https://pyimagesearch.com/2020/06/22/turning-any-cnn-image-classifier-into-an-object-detector-with-keras-tensorflow-and-opencv/
 
 
-ADA Boost: \n
-> Tutaj coś mówi w kontekście obrazów, ale nie zagłebiałem się za bardzo
+ADA Boost:
+> Tutaj coś mówi w kontekście obrazów, może być przydatne
 - https://www.youtube.com/watch?v=BxMIFZGSlOs&ab_channel=fancyfueko
-> Reszta to na jakiś losowych danych działa, chyba mało przydatne
+
+> Reszta to na jakiś losowych danych działa, trochę mało przydatne
 - https://levelup.gitconnected.com/adaboost-in-image-classification-8dcc1799e53d
 - https://machinelearningmastery.com/adaboost-ensemble-in-python/
 - https://www.kaggle.com/code/prashant111/adaboost-classifier-tutorial/notebook
