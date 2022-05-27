@@ -12,6 +12,9 @@ CNN:
 
 
 ADA Boost:
+Tutaj coś mówi w kontekście obrazów, ale nie zagłebiałem się za bardzo
+- https://www.youtube.com/watch?v=BxMIFZGSlOs&ab_channel=fancyfueko
+Reszta to na jakiś losowych danych działa, chyba mało przydatne
 - https://levelup.gitconnected.com/adaboost-in-image-classification-8dcc1799e53d
 - https://machinelearningmastery.com/adaboost-ensemble-in-python/
 - https://www.kaggle.com/code/prashant111/adaboost-classifier-tutorial/notebook
