@@ -14,6 +14,7 @@ CNN:
 ADA Boost:
 > Tutaj coś mówi w kontekście obrazów, może być przydatne
 - https://www.youtube.com/watch?v=BxMIFZGSlOs&ab_channel=fancyfueko
+- https://github.com/kraja99/cifar-10
 
 > Reszta to na jakiś losowych danych działa, trochę mało przydatne
 - https://levelup.gitconnected.com/adaboost-in-image-classification-8dcc1799e53d
