@@ -6,15 +6,16 @@ from tensorflow import keras
 from keras import layers
 from keras.models import Sequential
 
+# provide dataset directory
 data_dir = pathlib.Path(os.path.join('../data/'))
-# image_count = len(list(data_dir.glob('*/*.jpg')))
-# print(image_count)
 
+# setup training parameters
 epochs = 16
-batch_size = 64
-img_height = 180
-img_width = 180
+batch_size = 32
+img_height = 150
+img_width = 150
 
+# divide dataset into training set and validation set
 train_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
     validation_split=0.2,
@@ -23,7 +24,6 @@ train_ds = tf.keras.utils.image_dataset_from_directory(
     image_size=(img_height, img_width),
     batch_size=batch_size
 )
-
 val_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
     validation_split=0.2,
@@ -32,16 +32,18 @@ val_ds = tf.keras.utils.image_dataset_from_directory(
     image_size=(img_height, img_width),
     batch_size=batch_size
 )
-
 class_names = train_ds.class_names
 print(class_names)
 
+# optimize getting data from memory
 AUTOTUNE = tf.data.AUTOTUNE
 train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
 val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
+# normalize values from 0-255 to 0-1
 normalization_layer = layers.Rescaling(1./255)
 
+# augment data to prevent overfitting
 data_augmentation = keras.Sequential(
     [
         layers.RandomFlip("horizontal", input_shape=(img_height, img_width, 3)),
@@ -50,6 +52,7 @@ data_augmentation = keras.Sequential(
     ]
 )
 
+# create model
 model = Sequential([
     data_augmentation,
     layers.Rescaling(1. / 255, input_shape=(img_height, img_width, 3)),
@@ -64,17 +67,18 @@ model = Sequential([
     layers.Dense(128, activation='relu'),
     layers.Dense(2)
 ])
-
 model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
 
+# train model
 history = model.fit(
     train_ds,
     validation_data=val_ds,
     epochs=epochs
 )
 
+# plot results
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
 
@@ -97,4 +101,4 @@ plt.legend(loc='upper right')
 plt.title('Training and Validation Loss')
 plt.show()
 
-model.save('cnn_model.h5')
+# model.save('cnn_model.h5')
