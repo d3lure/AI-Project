@@ -1,3 +1,7 @@
+import pickle
+from datetime import time
+from random import random
+import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -60,13 +64,13 @@ base_name = 'dogs_cats'
 width = 80
 include = {'dog', 'cat'}
 
-# resize_all(src=data_path, pklname=base_name, width=width, include=include)
+resize_all(src=data_path, pklname=base_name, width=width, include=include)
 
 data = joblib.load(f'{base_name}_{width}x{width}px.pkl')
 print('number of samples: ', len(data['data']))
 print('keys: ', list(data.keys()))
 print('description: ', data['description'])
-print('image shape: ', data['data'][0].shape)
+# print('image shape: ', data['data'][0].shape)
 print('labels:', np.unique(data['label']))
 
 print(Counter(data['label']))
@@ -77,7 +81,7 @@ labels = np.unique(data['label'])
 X = np.array(data['data'])
 y = np.array(data['label'])
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True, random_state=123)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True, random_state=42)
 print(X_train.shape)
 print(X_test.shape)
 print(y_train.shape)
@@ -110,10 +114,21 @@ from sklearn.metrics import accuracy_score
 
 # svc = SVC(probability=True, kernel='linear')
 
-dtree = DecisionTreeClassifier(criterion='entropy', max_depth=1, random_state=1)
+
+clf = AdaBoostClassifier(n_estimators=100,)
+model = clf.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print(accuracy_score(y_test, y_pred))
+plt.figure(figsize=(8, 8))
+plt.subplot(1, 2, 1)
+plt.plot(100, clf.predict_proba(), label='Training Accuracy')
+plt.plot(100, clf.staged_predict(), label='Validation Accuracy')
+plt.legend(loc='lower right')
+plt.title('Training and Validation Accuracy')
 #
 # Instantiate the bagging classifier
 #
+dtree = DecisionTreeClassifier()
 abc = AdaBoostClassifier(base_estimator=dtree,
                          n_estimators=100,
                          learning_rate=0.0005,
@@ -124,9 +139,13 @@ abc = AdaBoostClassifier(base_estimator=dtree,
 # abc = AdaBoostClassifier(n_estimators=50, learning_rate=1)
 
 # Train Adaboost Classifier
-model = abc.fit(X_train, y_train)
+# model = abc.fit(X_train, y_train)
 
 # Predict the response for test dataset
-y_pred = model.predict(X_test)
+# y_pred = model.predict(X_test)
+#
+# print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+# print(abc.score(X_test, y_test))
+pickle.dump(model, open('adb_model.sav', 'wb'))
+pickle.dump(clf, open('adb_clf.sav', 'wb'))
 
-print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
