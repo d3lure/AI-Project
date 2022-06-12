@@ -64,9 +64,9 @@ base_name = 'dogs_cats'
 width = 80
 include = {'dog', 'cat'}
 
-resize_all(src=data_path, pklname=base_name, width=width, include=include)
+#resize_all(src=data_path, pklname=base_name, width=width, include=include)
 
-data = joblib.load(f'{base_name}_{width}x{width}px.pkl')
+data = joblib.load(f'./{base_name}_{width}x{width}px.pkl')
 print('number of samples: ', len(data['data']))
 print('keys: ', list(data.keys()))
 print('description: ', data['description'])
@@ -113,10 +113,12 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 
 # svc = SVC(probability=True, kernel='linear')
+n_estimators = 100
 
+clf = AdaBoostClassifier(n_estimators= n_estimators)
 
-clf = AdaBoostClassifier(n_estimators=100,)
 model = clf.fit(X_train, y_train)
+
 y_pred = model.predict(X_test)
 print(accuracy_score(y_test, y_pred))
 plt.figure(figsize=(8, 8))
@@ -128,12 +130,6 @@ plt.title('Training and Validation Accuracy')
 #
 # Instantiate the bagging classifier
 #
-dtree = DecisionTreeClassifier()
-abc = AdaBoostClassifier(base_estimator=dtree,
-                         n_estimators=100,
-                         learning_rate=0.0005,
-                         algorithm='SAMME',
-                         random_state=1)
 
 # Create adaboost classifier object
 # abc = AdaBoostClassifier(n_estimators=50, learning_rate=1)
