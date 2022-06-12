@@ -1,24 +1,16 @@
-import pickle
-from datetime import time
-from random import uniform
-from random import randint
-from random import choice
-import imageio
-import tensorflow as tf
-import matplotlib.pyplot as plt
+
 import numpy as np
 import os
+from random import randint
 
-from scipy import ndimage
 from sklearn.model_selection import train_test_split
 import joblib
 from skimage.io import imread
 from skimage.transform import resize, AffineTransform
 from skimage.transform import rotate
-from skimage import exposure
+from skimage.transform import warp
 from collections import Counter
 
-from sklearn.tree import DecisionTreeClassifier
 
 
 def resize_all(src, pklname, include, width=150, height=None):
@@ -66,11 +58,9 @@ def resize_all(src, pklname, include, width=150, height=None):
                 if file[-3:] in {'jpg', 'png'}:
                     im = imread(os.path.join(current_path, file))
                     im = resize(im, (width, height))  # [:,:,::-1]
-                    sign = choice([-1,1])
-                    im = rotate(im, sign*randint(1,20))
-                    im = exposure.adjust_gamma(im,gamma=uniform(0.6,0.9),gain=1)
-                    imageio.imwrite(file + '_modified.jpg', im)
-
+                    im = rotate(im, randint(1, 20))
+                    tf = AffineTransform(shear=-0.5)
+                    im = warp(im, tf, order=1, preserve_range=True, mode='wrap')
                     data['label'].append(subdir)
                     data['filename'].append(file)
                     data['data'].append(im)
@@ -116,10 +106,17 @@ print(X_train.shape)
 print(X_test.shape)
 
 print(np.array(y_train))
-# # exit()
+exit()
 #
 # # Load libraries
 # from sklearn.ensemble import AdaBoostClassifier
+# from sklearn import datasets
+# # Import train_test_split function
+# from sklearn.model_selection import train_test_split
+# # Import scikit-learn metrics module for accuracy calculation
+# from sklearn import metrics
+#
+# from sklearn.svm import SVC
 #
 # # import scikit-learn metrics module for accuracy calculation
 # from sklearn.metrics import accuracy_score
@@ -133,8 +130,21 @@ print(np.array(y_train))
 #
 # y_pred = model.predict(X_test)
 # print(accuracy_score(y_test, y_pred))
-# pickle.dump(model, open('adb_model.sav', 'wb'))
-# pickle.dump(clf, open('adb_clf.sav', 'wb'))
+
+# Instantiate the bagging classifier
+#
+
+# Create adaboost classifier object
+# abc = AdaBoostClassifier(n_estimators=50, learning_rate=1)
+
+# Train Adaboost Classifier
+# model = abc.fit(X_train, y_train)
+
+# Predict the response for test dataset
+# y_pred = model.predict(X_test)
+#
+# print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+# print(abc.score(X_test, y_test))
 # pickle.dump(model, open('adb_model.sav', 'wb'))
 # pickle.dump(clf, open('adb_clf.sav', 'wb'))
 
