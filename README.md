@@ -1,6 +1,6 @@
 # ADA Boost vs Convolutional Neural Networks <br> in Image Classification
 
-## Link do sprawozdania
+## Link to the report
 https://docs.google.com/document/d/163uMQb9-bUHF0PSLry2Lafn7EGXJh3DO0rDbsrggUXk/edit?usp=sharing
 
 ## Helpful links
@@ -10,17 +10,10 @@ CNN:
 - https://www.youtube.com/watch?v=ejkRh9obVjk&ab_channel=edureka%21
 - https://pyimagesearch.com/2020/06/22/turning-any-cnn-image-classifier-into-an-object-detector-with-keras-tensorflow-and-opencv/
 
-
 ADA Boost:
-> Tutaj coś mówi w kontekście obrazów, może być przydatne
 - https://www.youtube.com/watch?v=BxMIFZGSlOs&ab_channel=fancyfueko
 - https://github.com/kraja99/cifar-10
-
-> Reszta to na jakiś losowych danych działa, trochę mało przydatne
 - https://levelup.gitconnected.com/adaboost-in-image-classification-8dcc1799e53d
 - https://machinelearningmastery.com/adaboost-ensemble-in-python/
 - https://www.kaggle.com/code/prashant111/adaboost-classifier-tutorial/notebook
 - https://towardsdatascience.com/adaboost-from-scratch-37a936da3d50
-
-##
-> W `data.zip` macie wszystkie obrazy potrzebne do klasyfikacji
